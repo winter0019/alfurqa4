@@ -4,7 +4,6 @@ import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
-from firebase_functions import https_fn
 
 # Extensions
 bcrypt = Bcrypt()
@@ -43,3 +42,4 @@ def alfurqa_academy_app(req: https_fn.Request) -> https_fn.Response:
     """
     with app.app_context():
         return app.full_dispatch_request()
+
