@@ -31,15 +31,8 @@ def create_app():
 
     return app
 
-# Flask app instance
+# App instance for Flask CLI and Render
 app = create_app()
 
-# Firebase Cloud Function entry point
-@https_fn.on_request()
-def alfurqa_academy_app(req: https_fn.Request) -> https_fn.Response:
-    """
-    Entrypoint for handling Firebase HTTPS requests using Flask.
-    """
-    with app.app_context():
-        return app.full_dispatch_request()
-
+if __name__ == "__main__":
+    app.run(debug=True)
