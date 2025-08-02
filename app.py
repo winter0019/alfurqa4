@@ -6,10 +6,8 @@ from flask.cli import with_appcontext
 
 app = Flask(__name__)
 
-# Define your DB path
 DATABASE = os.path.join(os.getcwd(), 'database.db')
 
-# Your init_db logic
 def init_db():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
@@ -23,12 +21,14 @@ def init_db():
     conn.commit()
     conn.close()
 
-# CLI command
 @click.command('init-db')
 @with_appcontext
 def init_db_command():
     init_db()
-    click.echo('✅ Database initialized.')
+    click.echo('✅ Database initialized successfully.')
 
-# Register the command
 app.cli.add_command(init_db_command)
+
+@app.route('/')
+def home():
+    return 'Hello from Alfurqa4!'
