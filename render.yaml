@@ -3,4 +3,4 @@ services:
     name: alfurqan4
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn app:app"  # or main:app if you named it main.py
+    startCommand: "gunicorn app:app"
