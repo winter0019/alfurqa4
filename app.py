@@ -1,36 +1,31 @@
-from flask import Flask
 import sqlite3
-import os
-import click
-from flask.cli import with_appcontext
+from flask import Flask, g
 
 app = Flask(__name__)
-DATABASE = os.path.join(os.getcwd(), 'database.db')
+app.config.from_mapping(
+    DATABASE="database.db"  # Adjust if your DB file has another name
+)
+
+def get_db():
+    if 'db' not in g:
+        g.db = sqlite3.connect(app.config['DATABASE'])
+    return g.db
+
+@app.teardown_appcontext
+def close_db(error):
+    db = g.pop('db', None)
+    if db is not None:
+        db.close()
 
 def init_db():
-    conn = sqlite3.connect(DATABASE)
-    cursor = conn.cursor()
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT NOT NULL,
-            email TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+    db = get_db()
+    with open('schema.sql') as f:
+        db.executescript(f.read())
 
-@click.command('init-db')
-@with_appcontext
+import click
+
+@app.cli.command('init-db')
 def init_db_command():
+    """Clear existing data and create new tables."""
     init_db()
-    click.echo('✅ Database initialized successfully.')
-
-app.cli.add_command(init_db_command)
-
-@app.route('/')
-def home():
-    return 'Hello from Alfurqa4!'
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    click.echo('✅ Initialized the database.')
