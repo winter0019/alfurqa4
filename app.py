@@ -5,7 +5,6 @@ import click
 from flask.cli import with_appcontext
 
 app = Flask(__name__)
-
 DATABASE = os.path.join(os.getcwd(), 'database.db')
 
 def init_db():
@@ -32,3 +31,6 @@ app.cli.add_command(init_db_command)
 @app.route('/')
 def home():
     return 'Hello from Alfurqa4!'
+
+if __name__ == "__main__":
+    app.run(debug=True)
